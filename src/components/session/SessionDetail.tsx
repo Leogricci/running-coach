@@ -135,7 +135,8 @@ export function SessionDetail({
         </div>
 
         {/* Body — scrollable content only, NO buttons here */}
-        <div className="flex-1 overflow-y-auto px-5 space-y-4 py-4">
+        {/* min-height:0 is required: without it flex children ignore maxHeight and overflow-y won't scroll */}
+        <div className="flex-1 overflow-y-auto px-5 space-y-4 py-4" style={{ minHeight: 0, WebkitOverflowScrolling: "touch" }}>
           {/* Warm-up */}
           {session.warmup_notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
