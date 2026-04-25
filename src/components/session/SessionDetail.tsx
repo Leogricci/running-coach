@@ -88,16 +88,20 @@ export function SessionDetail({
     >
       <div
         ref={sheetRef}
-        className="w-full rounded-t-2xl safe-bottom overflow-y-auto max-h-[88vh]"
-        style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}
+        className="w-full rounded-t-2xl flex flex-col"
+        style={{
+          backgroundColor: "var(--bg-card)",
+          border: "1px solid var(--border)",
+          maxHeight: "90dvh",
+        }}
       >
-        {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
+        {/* Handle — not scrollable */}
+        <div className="flex-shrink-0 flex justify-center pt-3 pb-1">
           <div className="h-1 w-10 rounded-full" style={{ backgroundColor: "var(--border)" }} />
         </div>
 
-        {/* Header */}
-        <div className="px-5 pt-2 pb-4 flex items-start justify-between">
+        {/* Header — not scrollable */}
+        <div className="flex-shrink-0 px-5 pt-2 pb-4 flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <SessionChip type={session.type} />
@@ -130,8 +134,8 @@ export function SessionDetail({
           </button>
         </div>
 
-        {/* Body */}
-        <div className="px-5 space-y-5 pb-6">
+        {/* Body — scrollable */}
+        <div className="flex-1 overflow-y-auto px-5 space-y-5 py-5" style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
           {/* Warm-up */}
           {session.warmup_notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
@@ -194,11 +198,11 @@ export function SessionDetail({
           </div>
 
           {/* Action buttons */}
-          <div className="flex gap-3 pt-1">
+          <div className="flex flex-col gap-2.5 pt-1">
             {hasTimer && (
               <button
                 onClick={launchTimer}
-                className="flex-1 flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-opacity active:opacity-70"
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
                 style={{ backgroundColor: "var(--text-primary)", color: "var(--bg)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -211,18 +215,18 @@ export function SessionDetail({
             {!completed ? (
               <button
                 onClick={onMarkComplete}
-                className={`flex items-center justify-center gap-2 rounded-xl py-3.5 text-sm font-semibold transition-opacity active:opacity-70 ${hasTimer ? "px-4" : "flex-1"}`}
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
                 style={{ backgroundColor: "var(--easy)22", color: "var(--easy)" }}
               >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                   <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                {hasTimer ? "" : "Mark Done"}
+                Mark Done
               </button>
             ) : (
               <button
                 onClick={onMarkIncomplete}
-                className="flex items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold transition-opacity active:opacity-70"
+                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
                 style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-muted)" }}
               >
                 Undo
