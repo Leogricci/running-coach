@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Session } from "@/types/training";
+import type { Session, SessionLog } from "@/types/training";
 import { PLANS } from "@/data";
 import { useActivePlan } from "@/hooks/useActivePlan";
 import { useSessionLog } from "@/hooks/useSessionLog";
@@ -9,8 +9,6 @@ import { currentWeekNumber } from "@/utils/date";
 import { WeekCard } from "@/components/calendar/WeekCard";
 import { PlanFilter } from "@/components/calendar/PlanFilter";
 import { SessionDetail } from "@/components/session/SessionDetail";
-import { addSessionLog, deleteSessionLog, getSessionLogs } from "@/lib/storage";
-import type { SessionLog } from "@/types/training";
 
 export default function CalendarPage() {
   const { plan, planStartDate, setActivePlan } = useActivePlan();

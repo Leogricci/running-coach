@@ -134,8 +134,8 @@ export function SessionDetail({
           </button>
         </div>
 
-        {/* Body — scrollable */}
-        <div className="flex-1 overflow-y-auto px-5 space-y-5 py-5" style={{ paddingBottom: "max(1.5rem, env(safe-area-inset-bottom))" }}>
+        {/* Body — scrollable content only, NO buttons here */}
+        <div className="flex-1 overflow-y-auto px-5 space-y-4 py-4">
           {/* Warm-up */}
           {session.warmup_notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
@@ -171,7 +171,7 @@ export function SessionDetail({
           )}
 
           {/* Training rules reminder */}
-          <div className="rounded-xl px-4 py-3 space-y-1" style={{ backgroundColor: "var(--bg-elevated)" }}>
+          <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
             <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
               Reminders
             </p>
@@ -196,43 +196,49 @@ export function SessionDetail({
               </p>
             )}
           </div>
+        </div>
 
-          {/* Action buttons */}
-          <div className="flex flex-col gap-2.5 pt-1">
-            {hasTimer && (
-              <button
-                onClick={launchTimer}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
-                style={{ backgroundColor: "var(--text-primary)", color: "var(--bg)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="13" r="8" />
-                  <path d="M12 9v4l3 3M9.5 3h5M12 1v2" />
-                </svg>
-                Start Timer
-              </button>
-            )}
-            {!completed ? (
-              <button
-                onClick={onMarkComplete}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
-                style={{ backgroundColor: "var(--easy)22", color: "var(--easy)" }}
-              >
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Mark Done
-              </button>
-            ) : (
-              <button
-                onClick={onMarkIncomplete}
-                className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold transition-opacity active:opacity-70"
-                style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-muted)" }}
-              >
-                Undo
-              </button>
-            )}
-          </div>
+        {/* Action buttons — fixed footer, OUTSIDE scroll container so taps always register */}
+        <div
+          className="flex-shrink-0 flex flex-col gap-2.5 px-5 pt-3 pb-5"
+          style={{
+            borderTop: "1px solid var(--border)",
+            paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
+          }}
+        >
+          {hasTimer && (
+            <button
+              onClick={launchTimer}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold"
+              style={{ backgroundColor: "var(--text-primary)", color: "var(--bg)" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="13" r="8" />
+                <path d="M12 9v4l3 3M9.5 3h5M12 1v2" />
+              </svg>
+              Start Timer
+            </button>
+          )}
+          {!completed ? (
+            <button
+              onClick={onMarkComplete}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold"
+              style={{ backgroundColor: "#22c55e33", color: "#22c55e" }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M3 8l4 4 6-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Mark Done
+            </button>
+          ) : (
+            <button
+              onClick={onMarkIncomplete}
+              className="w-full flex items-center justify-center gap-2 rounded-xl py-4 text-sm font-semibold"
+              style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-muted)" }}
+            >
+              Undo
+            </button>
+          )}
         </div>
       </div>
     </div>
