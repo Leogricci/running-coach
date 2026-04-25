@@ -86,29 +86,30 @@ export function SessionDetail({
       style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
       onClick={handleOverlayClick}
     >
+      {/* Single scrollable sheet — the whole thing scrolls, buttons are sticky at bottom */}
       <div
         ref={sheetRef}
-        className="w-full rounded-t-2xl flex flex-col"
+        className="w-full rounded-t-2xl overflow-y-auto"
         style={{
           backgroundColor: "var(--bg-card)",
           border: "1px solid var(--border)",
           maxHeight: "90dvh",
         }}
       >
-        {/* Handle — not scrollable */}
-        <div className="flex-shrink-0 flex justify-center pt-3 pb-1">
+        {/* Handle */}
+        <div className="flex justify-center pt-3 pb-1">
           <div className="h-1 w-10 rounded-full" style={{ backgroundColor: "var(--border)" }} />
         </div>
 
-        {/* Header — not scrollable */}
-        <div className="flex-shrink-0 px-5 pt-2 pb-4 flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
+        {/* Header */}
+        <div className="px-5 pt-2 pb-4 flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
           <div>
             <div className="flex items-center gap-2 mb-1">
               <SessionChip type={session.type} />
               {completed && (
                 <span
                   className="text-xs font-medium px-2 py-0.5 rounded-full"
-                  style={{ backgroundColor: "var(--easy)22", color: "var(--easy)" }}
+                  style={{ backgroundColor: "#22c55e22", color: "#22c55e" }}
                 >
                   Done
                 </span>
@@ -134,9 +135,8 @@ export function SessionDetail({
           </button>
         </div>
 
-        {/* Body — scrollable content only, NO buttons here */}
-        {/* min-height:0 is required: without it flex children ignore maxHeight and overflow-y won't scroll */}
-        <div className="flex-1 overflow-y-auto px-5 space-y-4 py-4" style={{ minHeight: 0, WebkitOverflowScrolling: "touch" }}>
+        {/* Content */}
+        <div className="px-5 space-y-4 py-4">
           {/* Warm-up */}
           {session.warmup_notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
@@ -171,38 +171,31 @@ export function SessionDetail({
             </div>
           )}
 
-          {/* Training rules reminder */}
+          {/* Reminder */}
           <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
             <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
               Reminders
             </p>
             {session.type === "easy_run" && (
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                Easy = conversational. You should be able to say full sentences.
-              </p>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Easy = conversational. You should be able to say full sentences.</p>
             )}
             {session.type === "speed" && (
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                Generous recovery between reps — quality over fatigue.
-              </p>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Generous recovery between reps — quality over fatigue.</p>
             )}
             {session.type === "threshold" && (
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                Controlled effort — not all-out. A few words per breath, not a conversation.
-              </p>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Controlled effort — not all-out. A few words per breath, not a conversation.</p>
             )}
             {session.type === "specific" && (
-              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>
-                Race pace. Focused and controlled — not a time trial.
-              </p>
+              <p className="text-sm" style={{ color: "var(--text-secondary)" }}>Race pace. Focused and controlled — not a time trial.</p>
             )}
           </div>
         </div>
 
-        {/* Action buttons — fixed footer, OUTSIDE scroll container so taps always register */}
+        {/* Action buttons — sticky so they're always visible at the bottom of the sheet */}
         <div
-          className="flex-shrink-0 flex flex-col gap-2.5 px-5 pt-3 pb-5"
+          className="sticky bottom-0 flex flex-col gap-2.5 px-5 pt-3 pb-5"
           style={{
+            backgroundColor: "var(--bg-card)",
             borderTop: "1px solid var(--border)",
             paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
           }}
