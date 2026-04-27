@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { ServiceWorkerRegistrar } from "@/components/layout/ServiceWorkerRegistrar";
+import { AuthProvider } from "@/lib/auth-context";
 
 export const metadata: Metadata = {
   title: "Running Coach",
@@ -30,8 +31,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="h-full">
         <ServiceWorkerRegistrar />
-        <main className="h-full overflow-y-auto pb-20">{children}</main>
-        <BottomNav />
+        <AuthProvider>
+          <main className="h-full overflow-y-auto pb-20">{children}</main>
+          <BottomNav />
+        </AuthProvider>
       </body>
     </html>
   );
