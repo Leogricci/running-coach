@@ -72,7 +72,7 @@ export default function CalendarPage() {
 
       {/* Weeks list */}
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
-        {plan.weeks.length === 0 ? (
+        {!planStartDate ? null : plan.weeks.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="text-5xl mb-4">🏃</div>
             <p className="text-lg font-semibold" style={{ color: "var(--text-primary)" }}>
