@@ -78,14 +78,15 @@ export function SessionDetail({
         onClick={onClose}
       />
 
-      {/* Sheet — absolutely pinned to bottom of viewport, independent of any flex ancestor */}
+      {/* Sheet — sits above the bottom nav bar (nav is ~60px tall) */}
       <div
         ref={sheetRef}
-        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl"
+        className="fixed left-0 right-0 z-50 rounded-t-2xl"
         style={{
           backgroundColor: "var(--bg-card)",
           border: "1px solid var(--border)",
-          height: "85vh",
+          bottom: "60px",
+          maxHeight: "calc(100vh - 80px)",
           display: "flex",
           flexDirection: "column",
         }}
