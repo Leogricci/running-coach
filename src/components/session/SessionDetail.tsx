@@ -35,14 +35,8 @@ export function SessionDetail({
   onMarkComplete,
   onMarkIncomplete,
 }: Props) {
-  const overlayRef = useRef<HTMLDivElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-
-  // Close on overlay click
-  function handleOverlayClick(e: React.MouseEvent) {
-    if (e.target === overlayRef.current) onClose();
-  }
 
   // Close on Escape
   useEffect(() => {
@@ -53,13 +47,13 @@ export function SessionDetail({
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
 
-  // Animate in
+  // Slide-up animation
   useEffect(() => {
     const sheet = sheetRef.current;
     if (!sheet) return;
     sheet.style.transform = "translateY(100%)";
     requestAnimationFrame(() => {
-      sheet.style.transition = "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)";
+      sheet.style.transition = "transform 0.28s cubic-bezier(0.32, 0.72, 0, 1)";
       sheet.style.transform = "translateY(0)";
     });
   }, []);
@@ -68,41 +62,45 @@ export function SessionDetail({
   const hasTimer = (session.intervals?.length ?? 0) > 0;
 
   function launchTimer() {
-    // Store session reference in sessionStorage for timer page to pick up
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(
-        "timerSession",
-        JSON.stringify({ session, weekNumber }),
-      );
+      sessionStorage.setItem("timerSession", JSON.stringify({ session, weekNumber }));
     }
     onClose();
     router.push("/timer");
   }
 
   return (
-    <div
-      ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-end"
-      style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
-      onClick={handleOverlayClick}
-    >
-      {/* Single scrollable sheet — the whole thing scrolls, buttons are sticky at bottom */}
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 z-50"
+        style={{ backgroundColor: "rgba(0,0,0,0.6)" }}
+        onClick={onClose}
+      />
+
+      {/* Sheet — absolutely pinned to bottom of viewport, independent of any flex ancestor */}
       <div
         ref={sheetRef}
-        className="w-full rounded-t-2xl overflow-y-auto"
+        className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl"
         style={{
           backgroundColor: "var(--bg-card)",
           border: "1px solid var(--border)",
-          maxHeight: "90dvh",
+          height: "85vh",
+          display: "flex",
+          flexDirection: "column",
         }}
+        onClick={(e) => e.stopPropagation()}
       >
-        {/* Handle */}
-        <div className="flex justify-center pt-3 pb-1">
+        {/* Drag handle */}
+        <div className="flex-shrink-0 flex justify-center pt-3 pb-2">
           <div className="h-1 w-10 rounded-full" style={{ backgroundColor: "var(--border)" }} />
         </div>
 
         {/* Header */}
-        <div className="px-5 pt-2 pb-4 flex items-start justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div
+          className="flex-shrink-0 px-5 pb-4 flex items-start justify-between"
+          style={{ borderBottom: "1px solid var(--border)" }}
+        >
           <div>
             <div className="flex items-center gap-2 mb-1">
               <SessionChip type={session.type} />
@@ -126,7 +124,7 @@ export function SessionDetail({
           </div>
           <button
             onClick={onClose}
-            className="mt-1 flex h-8 w-8 items-center justify-center rounded-full"
+            className="flex h-8 w-8 items-center justify-center rounded-full"
             style={{ backgroundColor: "var(--bg-elevated)", color: "var(--text-muted)" }}
           >
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -135,9 +133,11 @@ export function SessionDetail({
           </button>
         </div>
 
-        {/* Content */}
-        <div className="px-5 space-y-4 py-4">
-          {/* Warm-up */}
+        {/* Scrollable content — flex-1 + overflow-y-auto works reliably when parent has a fixed height */}
+        <div
+          className="flex-1 overflow-y-auto px-5 py-4 space-y-4"
+          style={{ overscrollBehavior: "contain" }}
+        >
           {session.warmup_notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
               <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
@@ -149,7 +149,6 @@ export function SessionDetail({
             </div>
           )}
 
-          {/* Intervals */}
           {session.intervals && session.intervals.length > 0 && (
             <div>
               <p className="text-xs font-semibold uppercase tracking-wide mb-2.5" style={{ color: "var(--text-muted)" }}>
@@ -159,7 +158,6 @@ export function SessionDetail({
             </div>
           )}
 
-          {/* Notes */}
           {session.notes && (
             <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
               <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
@@ -171,7 +169,6 @@ export function SessionDetail({
             </div>
           )}
 
-          {/* Reminder */}
           <div className="rounded-xl px-4 py-3" style={{ backgroundColor: "var(--bg-elevated)" }}>
             <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: "var(--text-muted)" }}>
               Reminders
@@ -191,11 +188,10 @@ export function SessionDetail({
           </div>
         </div>
 
-        {/* Action buttons — sticky so they're always visible at the bottom of the sheet */}
+        {/* Action buttons — flex-shrink-0 footer, always visible */}
         <div
-          className="sticky bottom-0 flex flex-col gap-2.5 px-5 pt-3 pb-5"
+          className="flex-shrink-0 flex flex-col gap-2.5 px-5 pt-3"
           style={{
-            backgroundColor: "var(--bg-card)",
             borderTop: "1px solid var(--border)",
             paddingBottom: "max(1.25rem, env(safe-area-inset-bottom))",
           }}
@@ -235,6 +231,6 @@ export function SessionDetail({
           )}
         </div>
       </div>
-    </div>
+    </>
   );
 }
